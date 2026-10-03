@@ -1,0 +1,58 @@
+PHOTO FILE NAMES
+================
+Save each picture in this folder using the exact name below (.jpg, .jpeg, .png or .webp all work).
+The site shows it on that dish automatically. Dishes without a picture show a leaf placeholder.
+
+SPECIAL PICTURES
+hero.jpg             <- big picture on the Home page
+family-photo.jpg     <- family picture on the Our Story page
+video-1.jpg, ...     <- optional video covers (set in content/videos.js)
+
+== Banh Mi ==
+banh-mi-saigon-heo-nuong.jpg      <- Banh Mi Saigon (Heo Nuong)
+banh-mi-ga-nuong.jpg      <- Banh Mi Ga Nuong
+banh-mi-tom-nuong.jpg      <- Banh Mi Tom Nuong
+banh-mi-dac-biet.jpg      <- Banh Mi Dac Biet
+banh-mi-xiu-mai.jpg      <- Banh Mi Xiu Mai
+banh-mi-chay.jpg      <- Banh Mi Chay
+banh-mi-ga-chay.jpg      <- Banh Mi Ga Chay
+banh-mi-ca-ri-ga.jpg      <- Banh Mi Ca Ri Ga
+banh-mi-dau-hu.jpg      <- Banh Mi Dau Hu
+banh-mi-thit-xao-xa.jpg      <- Banh Mi Thit Xao Xa
+banh-mi-bi.jpg      <- Banh Mi Bi
+banh-mi-tom-xao-xa.jpg      <- Banh Mi Tom Xao Xa
+banh-mi-thit-nguoi.jpg      <- Banh Mi Thit Nguoi
+
+== Summer Rolls ==
+goi-cuon.jpg      <- Goi Cuon
+goi-nem-nuong-cuon.jpg      <- Goi Nem Nuong Cuon
+goi-bo-nuong-cuon.jpg      <- Goi Bo Nuong Cuon
+bi-cuon.jpg      <- Bi Cuon
+goi-cuon-chay.jpg      <- Goi Cuon Chay
+
+== Vermicelli ==
+bun-nem-nuong.jpg      <- Bun Nem Nuong
+bun-ga-nuong.jpg      <- Bun Ga Nuong
+bun-bo-xao-xa.jpg      <- Bun Bo Xao Xa
+bun-bi.jpg      <- Bun Bi
+bun-thit-xao-xa.jpg      <- Bun Thit Xao Xa
+bun-tom-xao-xa.jpg      <- Bun Tom Xao Xa
+bun-chay.jpg      <- Bun Chay
+
+== Rice Noodle ==
+banh-uot-cha-lua.jpg      <- Banh Uot Cha Lua
+banh-uot-ga.jpg      <- Banh Uot Ga
+
+== Soup ==
+hot-and-sour-soup.jpg      <- Hot and Sour Soup
+
+== Homemade Desserts ==
+che-dau-trang.jpg      <- Che Dau Trang
+xoi-nep-than.jpg      <- Xoi Nep Than
+che-bap.jpg      <- Che Bap
+che-mon.jpg      <- Che Mon
+che-chuoi.jpg      <- Che Chuoi
+banh-flan.jpg      <- Banh Flan
+banh-flan-la-dua.jpg      <- Banh Flan La Dua
+banh-bo-nuong.jpg      <- Banh Bo Nuong
+banh-da-lon.jpg      <- Banh Da Lon
