@@ -18,6 +18,9 @@ window.SITE_SETTINGS = {
 
   // Live Google reviews (nothing is saved, they load each time someone opens the Reviews tab).
   // The Google key lives in its own file, content/keys.js. If it is empty, the hand-pasted reviews in reviews.js are used.
+  // Address of your Cloudflare Worker (it holds the Google key so the key is never on the website).
+  // Example: "https://banh-mi-reviews.YOURNAME.workers.dev". Leave empty until the Worker is set up.
+  reviewsProxy: "https://banh-mi-reviews.tj204268122.workers.dev",
   placeId: "ChIJLZ_KRIhZwokRUanDSCyp1x4",
 
   yelp: "https://www.yelp.com/biz/banh-mi-saigon-new-york",
