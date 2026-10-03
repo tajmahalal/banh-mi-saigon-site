@@ -202,7 +202,7 @@ footer{border-top:1px solid var(--rule);padding-block:22px 34px;font:500 12px/1.
 </section>
 
 <section class="tab" id="reviews" hidden>
-  <div class="tabhead"><p class="eyebrow">4 stars and up, from Google and Yelp</p><h2>Reviews</h2></div>
+  <div class="tabhead"><h2>Reviews</h2></div>
   <div id="rev-out"></div>
   <div class="cta-row" id="rev-links" style="margin-top:28px"></div>
 </section>
@@ -323,7 +323,7 @@ function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9
   }
   function renderFallback(msg){ro.innerHTML="";} /* no reviews: show nothing, the Google and Yelp buttons below stay */
   function manualList(){
-    return REVIEWS.filter(function(r){return r.rating>=4;}).sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,5)
+    return REVIEWS.filter(function(r){return r.rating>=5;}).sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,3)
       .map(function(r){return {rating:r.rating,text:r.text,name:r.name,when:fdate(r.date)};});
   }
   function useBackup(msg){renderFallback(msg);}
@@ -338,8 +338,8 @@ function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9
     (proxy?fetch(proxy):fetch("https://places.googleapis.com/v1/places/"+encodeURIComponent(CONFIG.placeId)+"?languageCode=en",{headers:{"X-Goog-Api-Key":CONFIG.placesApiKey,"X-Goog-FieldMask":"reviews"}}))
       .then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json();})
       .then(function(d){
-        var list=(d.reviews||[]).filter(function(r){return r.rating>=4;})
-          .sort(function(a,b){return (b.publishTime||"").localeCompare(a.publishTime||"");}).slice(0,5)
+        var list=(d.reviews||[]).filter(function(r){return r.rating>=5;})
+          .sort(function(a,b){return (b.publishTime||"").localeCompare(a.publishTime||"");}).slice(0,3)
           .map(function(r){var au=r.authorAttribution||{};return {rating:r.rating,text:(r.text&&r.text.text)||(r.originalText&&r.originalText.text)||"",name:au.displayName||"Google user",url:au.uri,when:r.relativePublishTimeDescription||""};})
           .filter(function(x){return x.text;});
         if(list.length)renderCards(list);else useBackup("Read our 4 and 5 star reviews on Google and Yelp.");
