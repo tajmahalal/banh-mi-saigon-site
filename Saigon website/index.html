@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banh Mi Saigon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky tab bar, one tab visible at a time (URL hash). Menu is a filterable card grid with a photo slot on every dish. */
+:root{
+  /* Dark chocolate theme: dark brown backdrop, orange bar and tiles, peach and cream text. */
+  --orange:#FFB15A; --peach:#FFD8A8; --cream:#FFF2DF; --salmon:#F6A57B; --brown:#2A1B10;
+  --bg:#2A1B10; --ink:#3E2A1A; --text:#FFF2DF; --muted:#D9BFA0; --link:#FFD8A8; --rule:#4F3722;
+  --f-display:"Young Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:400 16px/1.55 var(--f-body);padding-inline:16px;padding-block:0;margin:0}
+.wrap{max-width:1080px;margin-inline:auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0;max-width:62ch}
+a{color:var(--link)}
+:focus-visible{outline:3px solid var(--peach);outline-offset:2px}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.tile .eyebrow,.dish .eyebrow{color:var(--ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--orange);margin-inline:-16px;padding-inline:16px}
+.bar .wrap{display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap;padding-block:10px}
+.brand{font:400 24px/1 var(--f-display);text-decoration:none;color:var(--ink);white-space:nowrap}
+nav{display:flex;gap:2px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+nav a{font:600 14px/1 var(--f-body);text-decoration:none;color:var(--ink);padding:10px 14px;border-radius:99px;white-space:nowrap}
+nav a:hover{background:rgba(42,27,16,.12)}
+nav a[aria-current="page"]{background:var(--peach);color:var(--ink)}
+
+section.tab{padding-block:40px 64px;scroll-margin-top:90px}
+.tabhead{display:grid;gap:12px;margin-bottom:28px}
+.tabhead h2{font-size:clamp(38px,7vw,68px);color:var(--peach)}
+
+.btn{display:inline-block;font:600 15px/1 var(--f-body);text-decoration:none;padding:14px 22px;border-radius:99px;border:2px solid var(--peach);background:var(--peach);color:var(--ink);cursor:pointer}
+.btn.alt{background:transparent;color:var(--peach);border-color:var(--peach)}
+.btn:hover{background:var(--orange);border-color:var(--orange);color:var(--ink)}
+.tile .btn{background:var(--brown);border-color:var(--brown);color:var(--cream)}
+.tile .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.btn[aria-disabled="true"]{opacity:.55;pointer-events:none;border-style:dashed}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px}
+
+/* home */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;align-items:center}
+.hero h1{font-size:clamp(46px,9vw,100px);color:var(--peach);margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.lede{font-size:18px;margin-top:18px}
+.hero .cta-row{margin-top:26px}
+.heroart{background:var(--orange);border-radius:28px;aspect-ratio:1/1;max-width:100%;display:grid;place-items:center;position:relative;overflow:hidden}
+.heroart svg{width:70%;height:auto;color:var(--ink)}
+.heroart .tag{position:absolute;left:18px;bottom:18px;right:18px;font:500 12px/1.4 var(--f-mono);color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin-top:44px}
+.fact{background:var(--orange);color:var(--ink);border:none;border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start;min-width:0}
+.fact h3{font-size:24px;color:var(--ink)}
+.fact dd,.fact dl{margin:0}
+.picks{margin-top:44px;display:grid;gap:14px}
+.picks h3{font-size:28px;color:var(--peach)}
+.pickrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.pick{border-top:3px solid var(--orange);padding-top:10px;display:grid;gap:4px;min-width:0}
+.pick b{font-weight:600}
+.pick span{color:var(--muted);font-size:14px}
+
+/* menu */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.chip{font:600 14px/1 var(--f-body);padding:10px 16px;border-radius:99px;border:1.5px solid var(--peach);background:transparent;color:var(--peach);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--peach);color:var(--ink)}
+.cat{display:grid;gap:18px;margin-bottom:44px}
+.cat h3{font-size:32px;color:var(--peach);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.cat h3 small{font:400 14px/1.4 var(--f-body);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:16px}
+.dish{background:var(--orange);color:var(--ink);border:none;border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0}
+.ph{aspect-ratio:4/3;background:var(--salmon);display:grid;place-items:center;color:var(--ink);max-width:100%}
+.ph svg{width:34%;height:auto;opacity:.75}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.dbody{padding:16px 16px 18px;display:grid;gap:6px;align-content:start}
+.dtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.dname{margin:0;font:400 20px/1.15 var(--f-display);color:var(--ink)}
+.dprice{font:500 15px/1 var(--f-mono);white-space:nowrap;color:var(--ink)}
+.dalt{font-size:13px;color:var(--ink);opacity:.85}
+.dnum{font:500 12px/1 var(--f-mono);color:var(--ink);opacity:.85;letter-spacing:.08em}
+.ing{font-size:14px;color:var(--ink);margin-top:4px}
+.ing b{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);opacity:.8;display:block;margin-bottom:4px}
+.note{font-size:14px;color:var(--muted);margin-top:8px}
+.drinks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:0 40px}
+.drow{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed var(--rule)}
+.drow span:first-child{min-width:0}
+.drow .dalt{display:block;color:var(--muted);opacity:1}
+.drow .pr{font:500 15px/1.4 var(--f-mono);white-space:nowrap;color:var(--peach)}
+
+/* story */
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.story p+p{margin-top:16px}
+.story .pull{font:400 clamp(28px,4vw,40px)/1.1 var(--f-display);color:var(--peach);margin-bottom:20px;max-width:none}
+.family{aspect-ratio:4/5;background:var(--orange);border:2px dashed var(--ink);border-radius:24px;display:grid;place-items:center;text-align:center;padding:24px;color:var(--ink);max-width:100%}
+.family img{width:100%;height:100%;object-fit:cover;border-radius:22px;display:block}
+.family:has(img){border:none;padding:0}
+.family b{display:block;color:var(--ink);font:400 22px/1.1 var(--f-display);margin-bottom:6px}
+
+/* reviews */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}
+.rev{background:var(--orange);color:var(--ink);border:none;border-radius:18px;padding:20px;display:grid;gap:10px;align-content:start;min-width:0}
+.who a{color:inherit}
+.stars{color:var(--ink);letter-spacing:.12em;font-size:18px}
+.who{display:flex;justify-content:space-between;gap:10px;font:500 12px/1.3 var(--f-mono);color:var(--ink);opacity:.85}
+.empty{background:var(--orange);color:var(--ink);border:none;border-radius:24px;padding:28px;display:grid;gap:14px;justify-items:start}
+.empty h3{font-size:30px;color:var(--ink)}
+
+/* videos */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:16px}
+.vid{display:grid;gap:10px;text-decoration:none;color:var(--text);min-width:0}
+.vthumb{aspect-ratio:9/16;background:var(--orange);border-radius:20px;display:grid;place-items:center;position:relative;overflow:hidden;max-width:100%}
+.vthumb img{width:100%;height:100%;object-fit:cover}
+.play{width:56px;height:56px;border-radius:50%;background:var(--peach);color:var(--ink);display:grid;place-items:center}
+.vcap{font-weight:600}
+
+/* order */
+.phone{font:700 clamp(32px,6vw,52px)/1.05 var(--f-body);letter-spacing:.01em;font-variant-numeric:lining-nums tabular-nums;color:var(--ink);overflow-wrap:anywhere;max-width:none}
+.steps{margin:0;padding-left:22px;display:grid;gap:8px}
+.steps a{color:var(--ink)}
+.hoursbox{display:grid;gap:12px;align-content:start;min-width:0}
+.hoursbox h3{font-size:34px;color:var(--peach)}
+.hrow{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px dashed var(--rule);border-radius:10px}
+.hrow span:last-child{font-family:var(--f-mono);text-align:right}
+.hrow.today{background:var(--peach);color:var(--ink);border-bottom-color:transparent}
+.hrow.closed span:last-child{opacity:.75}
+.orders{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px}
+.order{background:var(--orange);color:var(--ink);border:none;border-radius:24px;padding:28px;display:grid;gap:14px;align-content:start;min-width:0}
+.order h3{font-size:34px;color:var(--ink)}
+.order .cta-row{margin-top:6px}
+.soon{font:500 12px/1.4 var(--f-mono);color:var(--ink)}
+
+footer{border-top:1px solid var(--rule);padding-block:22px 34px;font:500 12px/1.6 var(--f-mono);color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+
+@media (max-width:760px){.hero,.story{grid-template-columns:minmax(0,1fr)}.heroart{aspect-ratio:16/10}.brand{font-size:21px}}
+</style>
+
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#home">Banh Mi Saigon</a>
+    <nav aria-label="Sections" id="nav">
+      <a href="#home">Home</a><a href="#menu">Menu</a><a href="#story">Our Story</a><a href="#reviews">Reviews</a><a href="#order">Order</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="tab" id="home">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Vietnamese sandwiches · Grand St, Chinatown</p>
+      <h1>Fresh <em>banh mi</em>, made to order.</h1>
+      <p class="lede">Crisp baguettes, pickled carrot and daikon, fresh cilantro, and fillings for every appetite, from BBQ pork to tofu and seitan. Plus summer rolls, vermicelli bowls, homemade desserts and Vietnamese coffee.</p>
+      <div class="cta-row"><a class="btn" href="#order">How to order</a><a class="btn alt" href="#menu">See the menu</a></div>
+    </div>
+    <div class="heroart" aria-label="Photo placeholder">
+      <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 70c0-22 20-38 46-38s46 16 46 38c0 6-4 10-10 10H24c-6 0-10-4-10-10Z"/><path d="M22 86h76c0 8-6 14-14 14H36c-8 0-14-6-14-14Z"/><path d="M38 60c8-8 14-8 20 0M62 56c7-7 13-7 19 1"/></svg>
+      <span class="tag">Hero photo goes here</span>
+    </div>
+  </div>
+
+  <div class="facts">
+    <dl class="fact tile"><h3>Find us</h3><dd id="h-addr"></dd><dd class="mono" id="h-phone"></dd></dl>
+    <dl class="fact tile"><h3>Hours</h3><dd class="mono" id="h-hours"></dd></dl>
+    <dl class="fact tile"><h3>Good to know</h3><dd>Family run. Everything is affordable, with sandwiches starting at $9.</dd></dl>
+  </div>
+
+  <div class="picks">
+    <h3>Start here</h3>
+    <div class="pickrow" id="picks"></div>
+  </div>
+</section>
+
+<section class="tab" id="menu" hidden>
+  <div class="tabhead"><p class="eyebrow">Banh mi · rolls · noodles · drinks · desserts</p><h2>The Menu</h2></div>
+  <div class="chips" id="chips" role="group" aria-label="Menu categories"></div>
+  <div id="menu-out"></div>
+</section>
+
+<section class="tab" id="story" hidden>
+  <div class="tabhead"><p class="eyebrow">Our family</p><h2>Our Story</h2></div>
+  <div class="story">
+    <div>
+      <p class="pull" id="story-pull">We have been part of this neighborhood for a while now.</p><div id="story-body">
+      <p>Banh Mi Saigon has been serving Grand Street for years. We make our sandwiches fresh, use good ingredients, and keep our prices affordable so that a great lunch never has to cost much.</p>
+      <p>This page is a placeholder. The full story of how the family started and what goes into every sandwich will be added here soon.</p>
+      </div>
+      <div class="cta-row" style="margin-top:24px"><a class="btn" href="#menu">See what we make</a></div>
+    </div>
+    <div class="family" id="family"><div><b>Family photo</b>Drop the family picture in here</div></div>
+  </div>
+</section>
+
+<section class="tab" id="reviews" hidden>
+  <div class="tabhead"><p class="eyebrow">4 stars and up, from Google and Yelp</p><h2>Reviews</h2></div>
+  <div id="rev-out"></div>
+  <div class="cta-row" id="rev-links" style="margin-top:28px"></div>
+</section>
+
+<section class="tab" id="order" hidden>
+  <div class="tabhead"><p class="eyebrow">Pickup only · order by phone</p><h2>Order by Phone</h2></div>
+  <div class="orders">
+    <div class="order tile">
+      <p class="eyebrow">Call to place your order</p>
+      <p class="phone mono-free" id="o-phone"></p>
+      <div class="cta-row"><a class="btn" id="o-call" href="#">Call now</a><button class="btn" id="o-copy" type="button">Copy number</button></div>
+      <ol class="steps">
+        <li>Pick your items from the <a href="#menu">menu</a> and note the item numbers.</li>
+        <li>Call during opening hours.</li>
+        <li>Tell them what you would like and your name.</li>
+        <li>Ask when it will be ready, then pick it up at <span id="o-addr"></span>.</li>
+      </ol>
+      <p class="soon">Pickup only for now. Delivery is not available.</p>
+    </div>
+    <div class="hoursbox">
+      <p class="eyebrow">Hours</p>
+      <h3>When to call</h3>
+      <div id="o-hours"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<div class="wrap"><footer><span>Banh Mi Saigon</span><span id="f-addr"></span></footer></div>
+
+<script src="content/settings.js"></script>
+<script src="content/menu.js"></script>
+<script src="content/story.js"></script>
+<script src="content/reviews.js"></script>
+<script>
+/* Content comes from the files in the content/ folder. Defaults below are used if a file is missing. */
+var CONFIG=window.SITE_SETTINGS||{address:"",phone:"",hours:"",hoursByDay:[],googleReviews:"",yelp:"",placeId:"",placesApiKey:""};
+var REVIEWS=window.SITE_REVIEWS||[];
+var MENU=window.SITE_MENU||[];
+var PICKS=window.SITE_PICKS||[];
+var STORY=window.SITE_STORY||{headline:"",text:""};
+function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
+
+(function(){
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+  var LEAF='<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 54V30M32 30c-8 0-14-6-14-14 8 0 14 6 14 14Zm0 6c8 0 14-6 14-14-8 0-14 6-14 14Z"/></svg>';
+  function money(v){return "$"+v;}
+  var EXTS=["jpg","jpeg","png","webp"];
+  function tryImage(base,alt,ok){var k=0,im=new Image();im.alt=alt;im.onload=function(){ok(im);};im.onerror=function(){k++;if(k<EXTS.length)im.src=base+"."+EXTS[k];};im.src=base+"."+EXTS[0];}
+  function photo(name){var p=el("div","ph");p.innerHTML=LEAF;tryImage("photos/"+slugify(name),name,function(im){im.loading="lazy";p.innerHTML="";p.appendChild(im);});return p;}
+
+  /* home facts */
+  document.getElementById("h-addr").textContent=CONFIG.address;
+  document.getElementById("h-phone").textContent=CONFIG.phone;
+  document.getElementById("h-hours").textContent=CONFIG.hours;
+  document.getElementById("f-addr").textContent=CONFIG.address;
+  var picks=document.getElementById("picks");
+  PICKS.forEach(function(p){var d=el("div","pick");d.appendChild(el("b",null,p[0]));d.appendChild(el("span",null,p[1]));picks.appendChild(d);});
+  tryImage("photos/hero","Banh Mi Saigon",function(im){var h=document.querySelector(".heroart");h.innerHTML="";im.style.cssText="width:100%;height:100%;object-fit:cover";h.appendChild(im);});
+
+  /* menu */
+  var chips=document.getElementById("chips"),out=document.getElementById("menu-out"),active="all";
+  function chip(id,label){var b=el("button","chip",label);b.type="button";b.dataset.id=id;b.setAttribute("aria-pressed",id===active?"true":"false");b.onclick=function(){active=id;render();};chips.appendChild(b);}
+  function render(){
+    chips.innerHTML="";chip("all","All");MENU.forEach(function(s){chip(s.id,s.g);});
+    out.innerHTML="";
+    MENU.forEach(function(s){
+      if(active!=="all"&&active!==s.id)return;
+      var c=el("div","cat"),h=el("h3",null,s.g);if(s.sub)h.appendChild(el("small",null,s.sub));c.appendChild(h);
+      if(s.drinks){
+        var d=el("div","drinks"),hot=el("div"),cold=el("div");
+        hot.appendChild(el("p","eyebrow","Hot · Small / Large"));
+        s.hot.forEach(function(x){var r=el("div","drow"),l=el("span",null,x[0]);l.appendChild(el("span","dalt",x[1]));r.appendChild(l);r.appendChild(el("span","pr",money(x[2])+" / "+money(x[3])));hot.appendChild(r);});
+        cold.appendChild(el("p","eyebrow","Cold"));
+        s.cold.forEach(function(x){var r=el("div","drow"),l=el("span",null,x[0]);l.appendChild(el("span","dalt",x[1]));r.appendChild(l);r.appendChild(el("span","pr",money(x[2])));cold.appendChild(r);});
+        d.appendChild(hot);d.appendChild(cold);c.appendChild(d);
+      }else{
+        var g=el("div","grid");
+        s.items.forEach(function(i){
+          var card=el("article","dish");card.appendChild(photo(i[1]));
+          var b=el("div","dbody");
+          if(i[0])b.appendChild(el("span","dnum","#"+i[0]));
+          var t=el("div","dtop");t.appendChild(el("h4","dname",i[1]));t.appendChild(el("span","dprice",(s.pricePrefix||"$")+i[3]));b.appendChild(t);
+          if(i[2])b.appendChild(el("span","dalt",i[2]));
+          var ing=el("p","ing");ing.appendChild(el("b",null,"Ingredients"));ing.appendChild(document.createTextNode(i[4]));b.appendChild(ing);
+          card.appendChild(b);g.appendChild(card);
+        });
+        c.appendChild(g);
+      }
+      if(s.note)c.appendChild(el("p","note",s.note));
+      out.appendChild(c);
+    });
+  }
+  render();
+
+  /* story photo */
+  var sp=document.getElementById("story-pull"),sb=document.getElementById("story-body");
+  if(STORY.headline)sp.textContent=STORY.headline;
+  if(STORY.text){sb.innerHTML="";STORY.text.split(/\n\s*\n/).forEach(function(t){t=t.trim();if(t)sb.appendChild(el("p",null,t));});}
+  tryImage("photos/family-photo","The Banh Mi Saigon family",function(im){var f=document.getElementById("family");f.innerHTML="";f.appendChild(im);});
+
+  /* reviews: live from Google when a key is set (nothing is stored), otherwise the hand-pasted list */
+  var ro=document.getElementById("rev-out"),revLoaded=false;
+  function fdate(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");if(!m)return d||"";return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m[2]-1]+" "+(+m[3])+", "+m[1];}
+  function clip(t){t=(t||"").trim();if(t.length<=380)return t;return t.slice(0,380).replace(/\s+\S*$/,"")+"...";}
+  function renderCards(list){
+    ro.innerHTML="";var g2=el("div","rgrid");
+    list.forEach(function(r){
+      var c=el("article","rev"),st="";for(var i=0;i<5;i++)st+=i<Math.round(r.rating)?"\u2605":"\u2606";
+      c.appendChild(el("div","stars",st));c.appendChild(el("p",null,clip(r.text)));
+      var w=el("div","who"),nm=el("span");
+      if(r.url){var a=el("a",null,r.name);a.href=r.url;a.target="_blank";a.rel="noopener";nm.appendChild(a);}else nm.textContent=r.name;
+      w.appendChild(nm);w.appendChild(el("span",null,"Google"+(r.when?" \u00b7 "+r.when:"")));c.appendChild(w);g2.appendChild(c);
+    });
+    ro.appendChild(g2);
+  }
+  function renderFallback(msg){ro.innerHTML="";var e=el("div","empty tile");e.appendChild(el("h3",null,"Read our reviews"));e.appendChild(el("p",null,msg));ro.appendChild(e);}
+  function manualList(){
+    return REVIEWS.filter(function(r){return r.rating>=4;}).sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,6)
+      .map(function(r){return {rating:r.rating,text:r.text,name:r.name,when:fdate(r.date)};});
+  }
+  function loadReviews(){
+    if(revLoaded)return;revLoaded=true;
+    if(!CONFIG.placesApiKey||!CONFIG.placeId){
+      var m=manualList();
+      if(m.length)renderCards(m);else renderFallback("Our 4 and 5 star reviews will show up here. Until then, you can read them on Google and Yelp.");
+      return;
+    }
+    ro.innerHTML="";ro.appendChild(el("p","note","Loading reviews..."));
+    fetch("https://places.googleapis.com/v1/places/"+encodeURIComponent(CONFIG.placeId)+"?languageCode=en",{headers:{"X-Goog-Api-Key":CONFIG.placesApiKey,"X-Goog-FieldMask":"reviews"}})
+      .then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json();})
+      .then(function(d){
+        var list=(d.reviews||[]).filter(function(r){return r.rating>=4;})
+          .sort(function(a,b){return (b.publishTime||"").localeCompare(a.publishTime||"");}).slice(0,6)
+          .map(function(r){var au=r.authorAttribution||{};return {rating:r.rating,text:(r.text&&r.text.text)||(r.originalText&&r.originalText.text)||"",name:au.displayName||"Google user",url:au.uri,when:r.relativePublishTimeDescription||""};})
+          .filter(function(x){return x.text;});
+        if(list.length)renderCards(list);else renderFallback("Read our 4 and 5 star reviews on Google and Yelp.");
+      })
+      .catch(function(){renderFallback("Reviews can't load right now. You can read them on Google and Yelp.");});
+  }
+
+  var rl=document.getElementById("rev-links");
+  [["Read reviews on Google",CONFIG.googleReviews,"btn"],["Read reviews on Yelp",CONFIG.yelp,"btn alt"]].forEach(function(l){
+    if(!l[1])return;var a=el("a",l[2],l[0]);a.href=l[1];a.target="_blank";a.rel="noopener";rl.appendChild(a);});
+
+  /* order by phone */
+  var oph=document.getElementById("o-phone");oph.textContent=CONFIG.phone;
+  document.getElementById("o-addr").textContent=CONFIG.address;
+  var oc=document.getElementById("o-call");oc.href="tel:"+CONFIG.phone.replace(/[^0-9+]/g,"");
+  var ocp=document.getElementById("o-copy");
+  ocp.onclick=function(){
+    function fallback(){var r=document.createRange();r.selectNodeContents(oph);var sel=window.getSelection();sel.removeAllRanges();sel.addRange(r);ocp.textContent="Number selected";}
+    try{navigator.clipboard.writeText(CONFIG.phone).then(function(){ocp.textContent="Copied";},fallback);}catch(e){fallback();}
+    setTimeout(function(){ocp.textContent="Copy number";},2500);
+  };
+  var oh=document.getElementById("o-hours"),dn=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],td=dn[new Date().getDay()];
+  (CONFIG.hoursByDay||[]).forEach(function(d){
+    var r=el("div","hrow"+(d[0]===td?" today":"")+(/closed/i.test(d[1])?" closed":""));
+    r.appendChild(el("span",null,d[0]+(d[0]===td?" (today)":"")));r.appendChild(el("span",null,d[1]));oh.appendChild(r);
+  });
+
+  /* tabs */
+  var tabs=["home","menu","story","reviews","order"];
+  function show(){
+    var h=(location.hash||"#home").slice(1);if(tabs.indexOf(h)<0)h="home";
+    tabs.forEach(function(t){document.getElementById(t).hidden=(t!==h);});
+    document.querySelectorAll("#nav a").forEach(function(a){if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+    window.scrollTo(0,0);setTimeout(function(){window.scrollTo(0,0);},0);
+    if(h==="reviews")loadReviews();
+  }
+  window.addEventListener("hashchange",show);show();
+})();
+</script>
+
+</body>
+</html>
