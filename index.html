@@ -321,17 +321,17 @@ function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9
     });
     ro.appendChild(g2);
   }
-  function renderFallback(msg){ro.innerHTML="";var e=el("div","empty tile");e.appendChild(el("h3",null,"Read our reviews"));e.appendChild(el("p",null,msg));ro.appendChild(e);}
+  function renderFallback(msg){ro.innerHTML="";} /* no reviews: show nothing, the Google and Yelp buttons below stay */
   function manualList(){
-    return REVIEWS.filter(function(r){return r.rating>=4;}).sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,6)
+    return REVIEWS.filter(function(r){return r.rating>=4;}).sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,5)
       .map(function(r){return {rating:r.rating,text:r.text,name:r.name,when:fdate(r.date)};});
   }
+  function useBackup(msg){renderFallback(msg);}
   function loadReviews(){
     if(revLoaded)return;revLoaded=true;
     var proxy=CONFIG.reviewsProxy||"";
     if(!proxy&&(!CONFIG.placesApiKey||!CONFIG.placeId)){
-      var m=manualList();
-      if(m.length)renderCards(m);else renderFallback("Our 4 and 5 star reviews will show up here. Until then, you can read them on Google and Yelp.");
+      renderFallback("");
       return;
     }
     ro.innerHTML="";ro.appendChild(el("p","note","Loading reviews..."));
@@ -339,12 +339,12 @@ function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9
       .then(function(r){if(!r.ok)throw new Error(String(r.status));return r.json();})
       .then(function(d){
         var list=(d.reviews||[]).filter(function(r){return r.rating>=4;})
-          .sort(function(a,b){return (b.publishTime||"").localeCompare(a.publishTime||"");}).slice(0,6)
+          .sort(function(a,b){return (b.publishTime||"").localeCompare(a.publishTime||"");}).slice(0,5)
           .map(function(r){var au=r.authorAttribution||{};return {rating:r.rating,text:(r.text&&r.text.text)||(r.originalText&&r.originalText.text)||"",name:au.displayName||"Google user",url:au.uri,when:r.relativePublishTimeDescription||""};})
           .filter(function(x){return x.text;});
-        if(list.length)renderCards(list);else renderFallback("Read our 4 and 5 star reviews on Google and Yelp.");
+        if(list.length)renderCards(list);else useBackup("Read our 4 and 5 star reviews on Google and Yelp.");
       })
-      .catch(function(){renderFallback("Reviews can't load right now. You can read them on Google and Yelp.");});
+      .catch(function(){useBackup("Reviews can't load right now. You can read them on Google and Yelp.");});
   }
 
   var rl=document.getElementById("rev-links");
