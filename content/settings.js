@@ -17,10 +17,8 @@ window.SITE_SETTINGS = {
   ],
 
   // Live Google reviews (nothing is saved, they load each time someone opens the Reviews tab).
-  // Leave placesApiKey empty to use the hand-pasted reviews in reviews.js instead.
-  // Only paste the key AFTER restricting it to your website address in Google Cloud (see README).
+  // The Google key lives in its own file, content/keys.js. If it is empty, the hand-pasted reviews in reviews.js are used.
   placeId: "ChIJLZ_KRIhZwokRUanDSCyp1x4",
-  placesApiKey: "",
 
   yelp: "https://www.yelp.com/biz/banh-mi-saigon-new-york",
   googleReviews: "https://search.google.com/local/reviews?placeid=ChIJLZ_KRIhZwokRUanDSCyp1x4"
