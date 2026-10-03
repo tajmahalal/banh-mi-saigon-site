@@ -5,6 +5,7 @@ Double-click index.html to open the site in your browser. After you change any f
 FOLDERS
   index.html        The website itself. You should not need to edit this.
   content/          The words and links. Open these in Notepad.
+     keys.js        The Google key for live reviews (kept separate on purpose)
      settings.js    Address, phone, hours for each day, Google and Yelp links
      menu.js        Every dish: name, price, ingredients
      story.js       The Our Story page (blank line between paragraphs)
@@ -28,10 +29,12 @@ LIVE GOOGLE REVIEWS (no weekly upkeep)
       Places API (New).
    3. Google Cloud > APIs and Services > Places API (New) > Quotas: set a low daily limit (about 30).
       Billing > Budgets and alerts: add a $1 budget alert.
-   4. Paste the key into content/settings.js next to placesApiKey, between the quotes.
+   4. Paste the key into content/keys.js between the quotes (edit it on GitHub, not on your computer).
    5. Upload the changed file. If reviews cannot load (limit reached, offline), the tab shows the
       Google and Yelp buttons instead.
   Leave placesApiKey empty to use the hand-pasted reviews in content/reviews.js instead.
+  BETTER (key hidden): put the key in a free Cloudflare Worker (cloudflare-worker.js) and paste the
+  Worker address into reviewsProxy in content/settings.js. Then keys.js stays empty.
 
 NOTES
   * The site cannot read Word documents directly (web browsers can't open them).
