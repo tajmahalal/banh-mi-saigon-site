@@ -234,12 +234,14 @@ footer{border-top:1px solid var(--rule);padding-block:22px 34px;font:500 12px/1.
 <div class="wrap"><footer><span>Banh Mi Saigon</span><span id="f-addr"></span></footer></div>
 
 <script src="content/settings.js"></script>
+<script src="content/keys.js"></script>
 <script src="content/menu.js"></script>
 <script src="content/story.js"></script>
 <script src="content/reviews.js"></script>
 <script>
 /* Content comes from the files in the content/ folder. Defaults below are used if a file is missing. */
 var CONFIG=window.SITE_SETTINGS||{address:"",phone:"",hours:"",hoursByDay:[],googleReviews:"",yelp:"",placeId:"",placesApiKey:""};
+CONFIG.placesApiKey=(window.SITE_KEYS&&window.SITE_KEYS.placesApiKey)||CONFIG.placesApiKey||"";
 var REVIEWS=window.SITE_REVIEWS||[];
 var MENU=window.SITE_MENU||[];
 var PICKS=window.SITE_PICKS||[];
