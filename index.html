@@ -231,7 +231,7 @@ footer{border-top:1px solid var(--rule);padding-block:22px 34px;font:500 12px/1.
 </section>
 
 </main>
-<div class="wrap"><footer><span>Banh Mi Saigon</span><span id="f-addr"></span></footer></div>
+<div class="wrap"><footer><span>&copy; 2026 Banh Mi Saigon. All rights reserved.</span><span id="f-addr"></span></footer></div>
 
 <script src="content/settings.js"></script>
 <script src="content/keys.js"></script>
@@ -316,7 +316,7 @@ function slugify(n){return n.toLowerCase().replace(/[()]/g,"").replace(/[^a-z0-9
       var c=el("article","rev"),st="";for(var i=0;i<5;i++)st+=i<Math.round(r.rating)?"\u2605":"\u2606";
       c.appendChild(el("div","stars",st));c.appendChild(el("p",null,clip(r.text)));
       var w=el("div","who"),nm=el("span");
-      if(r.url){var a=el("a",null,r.name);a.href=r.url;a.target="_blank";a.rel="noopener";nm.appendChild(a);}else nm.textContent=r.name;
+      if(r.url&&/^https:\/\//i.test(r.url)){var a=el("a",null,r.name);a.href=r.url;a.target="_blank";a.rel="noopener";nm.appendChild(a);}else nm.textContent=r.name;
       w.appendChild(nm);w.appendChild(el("span",null,"Google"+(r.when?" \u00b7 "+r.when:"")));c.appendChild(w);g2.appendChild(c);
     });
     ro.appendChild(g2);
